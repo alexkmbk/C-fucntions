@@ -1,3 +1,6 @@
+
+// За основу был взять алгортим перегодировки из CP1251 в UTF8,
+// опубликованный на форуме - http://www.linux.org.ru/forum/development/3968525
 // Преобразует строку в кодировке KZ1048 в строку utf-8
 //
 int cp1048ToUtf8(const char *src, int lenSrc, char **out) {
