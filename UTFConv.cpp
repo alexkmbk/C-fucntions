@@ -1,3 +1,33 @@
+inline int is_high_surrogate(char16_t uc) { return (uc & 0xfffffc00) == 0xd800; }
+inline int is_low_surrogate(char16_t uc) { return (uc & 0xfffffc00) == 0xdc00; }
+
+inline char32_t surrogate_to_utf32(char16_t high, char16_t low) {
+	return (high << 10) + low - 0x35fdc00;
+}
+
+// The algorithm is based on this answer:
+//https://stackoverflow.com/a/23920015/2134488
+//
+void convertUTF16ToUTF32(const char16_t *input,
+	size_t input_size,
+	char32_t *output)
+{
+	const char16_t * const end = input + input_size;
+	while (input < end) {
+		const char16_t uc = *input++;
+		if (!((uc - 0xd800u) < 2048u)) {
+			*output++ = uc;
+		}
+		else {
+			if (is_high_surrogate(uc) && input < end && is_low_surrogate(*input))
+				*output++ = surrogate_to_utf32(uc, *input++);
+			else
+				*output++ = 0; //ERROR
+		}
+	}
+}
+
+
 // The algorithm is based on this answer:
 //https://stackoverflow.com/questions/955484/is-it-possible-to-convert-utf32-text-to-utf16-using-only-windows-api
 //
