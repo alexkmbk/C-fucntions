@@ -51,3 +51,8 @@ unsigned int convertUTF32ToUTF16(const char32_t *input, size_t input_size, char1
 	}
 	return (output - start) * 2; // size in bytes
 }
+
+void convertUTF16ToUTF8(const WCHAR_T* src, int srcLen, string& output){
+
+     utf8::utf16to8(src, src+srcLen, std::back_inserter(output));
+}
